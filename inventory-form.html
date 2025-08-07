@@ -167,37 +167,51 @@
         <div class="card__form">
             <div class="inventory-item">
                 <div class="item-name">Намазка с картошкой, селёдкой и луком</div>
-                <input type="number" class="quantity-input" id="item1" value="" min="0" placeholder="грамм">
+                <input type="number" class="quantity-input" id="item1" value="" min="0" placeholder="грамм" 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                       onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
             <div class="inventory-item">
                 <div class="item-name">Намазка сливочный рийет со шпротами</div>
-                <input type="number" class="quantity-input" id="item2" value="" min="0" placeholder="грамм">
+                <input type="number" class="quantity-input" id="item2" value="" min="0" placeholder="грамм" 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                       onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
             <div class="inventory-item">
                 <div class="item-name">Намазка с сыром чесноком и вяленым томатом</div>
-                <input type="number" class="quantity-input" id="item3" value="" min="0" placeholder="грамм">
+                <input type="number" class="quantity-input" id="item3" value="" min="0" placeholder="грамм" 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                       onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
             <div class="inventory-item">
                 <div class="item-name">Намазка Форшмак</div>
-                <input type="number" class="quantity-input" id="item4" value="" min="0" placeholder="грамм">
+                <input type="number" class="quantity-input" id="item4" value="" min="0" placeholder="грамм" 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                       onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
             <div class="inventory-item">
                 <div class="item-name">Вафельная трубочка с варёной сгущёнкой</div>
-                <input type="number" class="quantity-input" id="item5" value="" min="0" placeholder="штук">
+                <input type="number" class="quantity-input" id="item5" value="" min="0" placeholder="штук" 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                       onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
             <div class="inventory-item">
                 <div class="item-name">Квашеная капуста</div>
-                <input type="number" class="quantity-input" id="item6" value="" min="0" placeholder="грамм">
+                <input type="number" class="quantity-input" id="item6" value="" min="0" placeholder="грамм" 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                       onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
             <div class="inventory-item">
                 <div class="item-name">Лук красный маринованный</div>
-                <input type="number" class="quantity-input" id="item7" value="" min="0" placeholder="грамм">
+                <input type="number" class="quantity-input" id="item7" value="" min="0" placeholder="грамм" 
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')" 
+                       onkeypress="return event.charCode >= 48 && event.charCode <= 57">
             </div>
 
             <button class="submit-btn" type="button" onclick="submitInventory()">Отправить данные</button>
