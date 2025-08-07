@@ -213,20 +213,21 @@
             
             // Собираем данные из всех полей
             const inventoryData = {
-                'Намазка с картошкой, селёдкой и луком (гр.)': parseInt(document.getElementById('item1').value) || 0,
-                'Намазка сливочный рийет со шпротами (гр.)': parseInt(document.getElementById('item2').value) || 0,
-                'Намазка с сыром чесноком и вяленым томатом (гр.)': parseInt(document.getElementById('item3').value) || 0,
-                'Намазка Форшмак (гр.)': parseInt(document.getElementById('item4').value) || 0,
-                'Вафельная трубочка с варёной сгущёнкой (шт.)': parseInt(document.getElementById('item5').value) || 0,
-                'Квашеная капуста (гр.)': parseInt(document.getElementById('item6').value) || 0,
-                'Лук красный маринованный (гр.)': parseInt(document.getElementById('item7').value) || 0
+                'item1': parseInt(document.getElementById('item1').value) || 0,
+                'item2': parseInt(document.getElementById('item2').value) || 0,
+                'item3': parseInt(document.getElementById('item3').value) || 0,
+                'item4': parseInt(document.getElementById('item4').value) || 0,
+                'item5': parseInt(document.getElementById('item5').value) || 0,
+                'item6': parseInt(document.getElementById('item6').value) || 0,
+                'item7': parseInt(document.getElementById('item7').value) || 0,
+                'timestamp': new Date().toISOString()
             };
             
             // Проверяем, что все поля заполнены (не равны 0)
             const emptyFields = [];
-            for (const [item, quantity] of Object.entries(inventoryData)) {
-                if (quantity === 0) {
-                    emptyFields.push(item);
+            for (let i = 1; i <= 7; i++) {
+                if (inventoryData[`item${i}`] === 0) {
+                    emptyFields.push(`item${i}`);
                 }
             }
             
@@ -235,26 +236,24 @@
                 return;
             }
             
-            // Добавляем timestamp
-            inventoryData.timestamp = new Date().toISOString();
-            
             try {
-                // Замените YOUR_WEBHOOK_URL на ваш реальный URL вебхука
+                // Формируем URL с параметрами для GET-запроса
                 const webhookUrl = 'https://n8n.troshinsasha.ru/webhook/micro-younst-v1';
+                const params = new URLSearchParams(inventoryData);
+                const fullUrl = `${webhookUrl}?${params.toString()}`;
                 
-                const response = await fetch(webhookUrl, {
-                    method: 'POST',
+                const response = await fetch(fullUrl, {
+                    method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(inventoryData)
+                        'Accept': 'application/json',
+                    }
                 });
                 
                 if (response.ok) {
                     messageDiv.innerHTML = '<div class="success">Данные успешно отправлены!</div>';
                     // Очищаем форму после успешной отправки
                     for (let i = 1; i <= 7; i++) {
-                        document.getElementById(`item${i}`).value = '0';
+                        document.getElementById(`item${i}`).value = '';
                     }
                 } else {
                     throw new Error('Ошибка при отправке данных');
