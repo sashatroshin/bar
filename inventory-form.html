@@ -261,26 +261,18 @@
             }
             
             try {
-                // Формируем URL с параметрами для GET-запроса
                 const webhookUrl = 'https://n8n.troshinsasha.ru/webhook/micro-younst-v1';
                 
-                // Создаем URLSearchParams, но числа будут переданы как числа
-                const params = new URLSearchParams();
-                for (const [key, value] of Object.entries(inventoryData)) {
-                    params.append(key, value.toString());
-                }
+                console.log('Отправляем данные как числа:', inventoryData); // Проверяем типы данных
                 
-                const fullUrl = `${webhookUrl}?${params.toString()}`;
-                
-                console.log('Отправляем запрос на:', fullUrl); // Для отладки
-                console.log('Данные как числа:', inventoryData); // Проверяем типы данных
-                
-                const response = await fetch(fullUrl, {
-                    method: 'GET',
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
                     mode: 'cors',
                     headers: {
+                        'Content-Type': 'application/json',
                         'Accept': 'application/json',
-                    }
+                    },
+                    body: JSON.stringify(inventoryData)
                 });
                 
                 console.log('Статус ответа:', response.status);
