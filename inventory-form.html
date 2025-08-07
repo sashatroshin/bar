@@ -211,23 +211,33 @@
             const messageDiv = document.getElementById('message');
             messageDiv.innerHTML = '';
             
-            // Собираем данные из всех полей
+            // Собираем данные из всех полей с полными названиями как числа
             const inventoryData = {
-                'item1': parseInt(document.getElementById('item1').value) || 0,
-                'item2': parseInt(document.getElementById('item2').value) || 0,
-                'item3': parseInt(document.getElementById('item3').value) || 0,
-                'item4': parseInt(document.getElementById('item4').value) || 0,
-                'item5': parseInt(document.getElementById('item5').value) || 0,
-                'item6': parseInt(document.getElementById('item6').value) || 0,
-                'item7': parseInt(document.getElementById('item7').value) || 0,
+                'Намазка с картошкой, селёдкой и луком': parseInt(document.getElementById('item1').value) || 0,
+                'Намазка сливочный рийет со шпротами': parseInt(document.getElementById('item2').value) || 0,
+                'Намазка с сыром чесноком и вяленым томатом': parseInt(document.getElementById('item3').value) || 0,
+                'Намазка Форшмак': parseInt(document.getElementById('item4').value) || 0,
+                'Вафельная трубочка с варёной сгущёнкой': parseInt(document.getElementById('item5').value) || 0,
+                'Квашеная капуста': parseInt(document.getElementById('item6').value) || 0,
+                'Лук красный маринованный': parseInt(document.getElementById('item7').value) || 0,
                 'timestamp': new Date().toISOString()
             };
             
             // Проверяем, что все поля заполнены (не равны 0)
             const emptyFields = [];
-            for (let i = 1; i <= 7; i++) {
-                if (inventoryData[`item${i}`] === 0) {
-                    emptyFields.push(`item${i}`);
+            const productNames = [
+                'Намазка с картошкой, селёдкой и луком',
+                'Намазка сливочный рийет со шпротами', 
+                'Намазка с сыром чесноком и вяленым томатом',
+                'Намазка Форшмак',
+                'Вафельная трубочка с варёной сгущёнкой',
+                'Квашеная капуста',
+                'Лук красный маринованный'
+            ];
+            
+            for (const productName of productNames) {
+                if (inventoryData[productName] === 0) {
+                    emptyFields.push(productName);
                 }
             }
             
@@ -239,20 +249,27 @@
             try {
                 // Формируем URL с параметрами для GET-запроса
                 const webhookUrl = 'https://n8n.troshinsasha.ru/webhook/micro-younst-v1';
-                const params = new URLSearchParams(inventoryData);
+                
+                // Создаем URLSearchParams, но числа будут переданы как числа
+                const params = new URLSearchParams();
+                for (const [key, value] of Object.entries(inventoryData)) {
+                    params.append(key, value.toString());
+                }
+                
                 const fullUrl = `${webhookUrl}?${params.toString()}`;
                 
                 console.log('Отправляем запрос на:', fullUrl); // Для отладки
+                console.log('Данные как числа:', inventoryData); // Проверяем типы данных
                 
                 const response = await fetch(fullUrl, {
                     method: 'GET',
-                    mode: 'cors', // Явно указываем CORS
+                    mode: 'cors',
                     headers: {
                         'Accept': 'application/json',
                     }
                 });
                 
-                console.log('Статус ответа:', response.status); // Для отладки
+                console.log('Статус ответа:', response.status);
                 
                 if (response.ok) {
                     messageDiv.innerHTML = '<div class="success">Данные успешно отправлены!</div>';
@@ -266,14 +283,12 @@
             } catch (error) {
                 console.error('Детали ошибки:', error);
                 
-                // Более детальная обработка ошибок
                 if (error.name === 'TypeError' && error.message.includes('fetch')) {
                     messageDiv.innerHTML = '<div class="error">Ошибка CORS или сетевая ошибка. Проверьте настройки webhook.</div>';
                 } else {
                     messageDiv.innerHTML = `<div class="error">Ошибка: ${error.message}</div>`;
                 }
                 
-                // Для тестирования - выводим данные в консоль
                 console.log('Данные инвентаризации:', inventoryData);
             }
         }
