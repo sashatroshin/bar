@@ -242,12 +242,17 @@
                 const params = new URLSearchParams(inventoryData);
                 const fullUrl = `${webhookUrl}?${params.toString()}`;
                 
+                console.log('Отправляем запрос на:', fullUrl); // Для отладки
+                
                 const response = await fetch(fullUrl, {
                     method: 'GET',
+                    mode: 'cors', // Явно указываем CORS
                     headers: {
                         'Accept': 'application/json',
                     }
                 });
+                
+                console.log('Статус ответа:', response.status); // Для отладки
                 
                 if (response.ok) {
                     messageDiv.innerHTML = '<div class="success">Данные успешно отправлены!</div>';
@@ -256,11 +261,17 @@
                         document.getElementById(`item${i}`).value = '';
                     }
                 } else {
-                    throw new Error('Ошибка при отправке данных');
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
             } catch (error) {
-                console.error('Ошибка:', error);
-                messageDiv.innerHTML = '<div class="error">Ошибка при отправке данных. Проверьте подключение к интернету и попробуйте снова.</div>';
+                console.error('Детали ошибки:', error);
+                
+                // Более детальная обработка ошибок
+                if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    messageDiv.innerHTML = '<div class="error">Ошибка CORS или сетевая ошибка. Проверьте настройки webhook.</div>';
+                } else {
+                    messageDiv.innerHTML = `<div class="error">Ошибка: ${error.message}</div>`;
+                }
                 
                 // Для тестирования - выводим данные в консоль
                 console.log('Данные инвентаризации:', inventoryData);
